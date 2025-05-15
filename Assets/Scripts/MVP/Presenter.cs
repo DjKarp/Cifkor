@@ -61,7 +61,7 @@ namespace Cifkor.Karpusha
         }
 
         private void LoadWeatherData()
-        {            
+        {
             _modelWeather.FakeAnswert();
             StartCoroutine(ApplyNewWeaterData());
         }

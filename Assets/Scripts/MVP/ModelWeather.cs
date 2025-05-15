@@ -13,45 +13,30 @@ namespace Cifkor.Karpusha
 {
     public class ModelWeather : Model
     {
-        protected string URL = "https://api.weather.gov/gridpoints/TOP/32,81/forecast";
+        private string _realURL = "https://api.weather.gov/gridpoints/TOP/32,81/forecast";
+
+        // Если не получилось десериализовать JSON, скачиваем картинку и подставляем заранее посмотренные данные
+        private string _urlImage = "https://api.weather.gov/icons/land/night/few?size=medium";
 
         private Period _periods;
         private Coroutine _coroutine;
+        private string _responseJSON;
 
-        public Period GetWeather;
-
-
-        public Period LoadData()
+        public void GetWeather(Action<string> response, Action callback)
         {
-            _coroutine = StartCoroutine(LoadFromServer());
-            return _periods;
+            //response(WebRequestService.RequestJSON(_realURL, null, response, callback));
+
+            //string[] lines = request.downloadHandler.text.Split(new string[] { "periods" }, StringSplitOptions.None);
+            //string line = lines.LastOrDefault().Substring(lines.LastOrDefault().IndexOf('['), lines.LastOrDefault().IndexOf(']') - lines.LastOrDefault().IndexOf('[') + 1);
+
+            var jsonText = JObject.Parse(_responseJSON);
+            var rrr = JsonConvert.DeserializeObject<Period>(_responseJSON);
+            var data = JsonUtility.FromJson<Period>(_responseJSON);
+
+
+            IList<JToken> results = jsonText["period"].Children().ToList();
         }
 
-        public IEnumerator LoadFromServer()
-        {
-            var request = UnityWebRequest.Get(URL);
-
-            yield return request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.ProtocolError && request.result != UnityWebRequest.Result.ConnectionError)
-            {
-                //string[] lines = request.downloadHandler.text.Split(new string[] { "periods" }, StringSplitOptions.None);
-                //string line = lines.LastOrDefault().Substring(lines.LastOrDefault().IndexOf('['), lines.LastOrDefault().IndexOf(']') - lines.LastOrDefault().IndexOf('[') + 1);
-
-                var jsonText = JObject.Parse(request.downloadHandler.text);
-                var rrr = JsonConvert.DeserializeObject<Period>(request.downloadHandler.text);
-                var data = JsonUtility.FromJson<Period>(request.downloadHandler.text);
-
-
-                IList<JToken> results = jsonText["period"].Children().ToList();
-            }
-            else
-            {
-                Debug.LogErrorFormat("error request [{0}, {1}]", URL, request.error);
-            }
-
-            request.Dispose();
-        }
 
         /// Так как не получилось десеарилизовать строку JSON, чтобы завершить задачу, сделал фейковый ответ JsonConvert / JsonUtility
 
