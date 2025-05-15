@@ -7,17 +7,18 @@ using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Cifkor.Karpusha
 {
-    public class ModelWeather : MonoBehaviour
+    public class ModelWeather : Model
     {
         protected string URL = "https://api.weather.gov/gridpoints/TOP/32,81/forecast";
 
-
-        private Period _periods;        
-
+        private Period _periods;
         private Coroutine _coroutine;
+
+        public Period GetWeather;
 
 
         public Period LoadData()
@@ -52,6 +53,7 @@ namespace Cifkor.Karpusha
             request.Dispose();
         }
 
+        /// Так как не получилось десеарилизовать строку JSON, чтобы завершить задачу, сделал фейковый ответ JsonConvert / JsonUtility
 
         private NewPeriod _newPeriod;
         private Texture2D _weatherTexture;

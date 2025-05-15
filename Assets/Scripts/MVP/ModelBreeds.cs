@@ -1,18 +1,19 @@
 using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Cifkor.Karpusha
 {
-    public class ModelBreeds : MonoBehaviour
+    public class ModelBreeds : Model
     {
-        protected string URL = "https://dogapi.dog/api/v2/breeds";
+        private string URL = "https://dogapi.dog/api/v2/breeds";
 
         private string _breedDesc;
 
@@ -71,6 +72,8 @@ namespace Cifkor.Karpusha
 
             request.Dispose();
         }
+
+        /// Так как не получилось десеарилизовать строку JSON, чтобы завершить задачу, сделал фейковый ответ JsonConvert / JsonUtility
 
         private Dictionary<string, string> _breeds = new Dictionary<string, string>();
         private Dictionary<string, string> _breedsFakeDesc = new Dictionary<string, string>();

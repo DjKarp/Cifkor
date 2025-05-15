@@ -8,10 +8,23 @@ namespace Cifkor.Karpusha
         [SerializeField] private Presenter _presenter;
         [SerializeField] private WeatherView _weatherView;
         [SerializeField] private DogBreedsView _breedsView;
+        private WebRequestService _webRequestService;
 
         public override void InstallBindings()
         {
-            BindView();        
+            BindWebRequestService();
+            BindView();
+        }
+
+        private void BindWebRequestService()
+        {
+            _webRequestService = new WebRequestService();
+
+            Container
+                .Bind<WebRequestService>()
+                .FromInstance(_webRequestService)
+                .AsSingle()
+                .NonLazy();
         }
 
         private void BindView()
@@ -24,14 +37,12 @@ namespace Cifkor.Karpusha
             Container
                 .Bind<WeatherView>()
                 .FromInstance(weatherView)
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
             
             Container
                 .Bind<DogBreedsView>()
                 .FromInstance(dogBreedView)
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
         }
     }
 }
